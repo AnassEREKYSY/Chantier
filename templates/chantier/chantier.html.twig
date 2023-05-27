@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <style>
+        a{
+            color: aliceblue;
+            text-decoration: none;
+        }
+        a:hover{
+            cursor: pointer;
+            color: aliceblue;
+        }
+    </style>
+    <div class="container text-center">
+        <button type="button" class="btn btn-primary mx-5">
+            <a href="{{ path('app_add',{'id':'chantier'}) }}">Ajouter</a>
+        </button>
+        <button type="button" class="btn btn-success mx-5">
+            <a href="{{path('app_searche',{'id':'chantier'})}}">Chercher</a>
+        </button>
+    </div>
+
+    <section class="contanier my-5">
+        <table class="table text-center">
+                <thead>
+                    <tr>
+                        <th class="col-1">ID</th>
+                        <th class="col-5">Description</th>
+                        <th class="col-2">Date début</th>
+                        <th class="col-1">Date fin</th>
+                        <th class="col-1">Type</th>
+                        <th class="col-1">Statut</th>
+                        <th class="col-2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for chantier in chantiers %}
+                        <tr>
+                            <td>{{ chantier.id }}</td>
+                            <td>{{ chantier.description }}</td>
+                            <td>{{ chantier.dateDebut | date('d/m/y')}}</td>
+                            <td>{{ chantier.dateFin | date('d/m/y')}}</td>
+                            <td>{{ chantier.type }}</td>
+                            <td>{{ chantier.statut }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm">
+                                    <a href="{{ path('app_update',{'id':'chantier'})}}">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm">
+                                    <a href="{{ path('app_delete',{'id':'chantier'})}}">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </button>
+                            </td>
+                        </tr>
+                   {% endfor %}
+                </tbody>
+            </table>
+    </section>
+{% endblock %}
