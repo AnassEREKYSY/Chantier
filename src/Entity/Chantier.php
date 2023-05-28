@@ -7,8 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
 #[ORM\Entity(repositoryClass: ChantierRepository::class)]
+
 class Chantier
 {
     #[ORM\Id]
@@ -16,8 +16,12 @@ class Chantier
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(nullable: true)]
     private ?int $id_chantier = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true, unique: true)]
+    private ?string $nom_chantier = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
@@ -59,6 +63,18 @@ class Chantier
     public function setIdChantier(?int $id_chantier): self
     {
         $this->id_chantier = $id_chantier;
+
+        return $this;
+    }
+
+    public function getNomChantier(): ?string
+    {
+        return $this->nom_chantier;
+    }
+
+    public function setNomChantier(?string $nom_chantier): self
+    {
+        $this->nom_chantier = $nom_chantier;
 
         return $this;
     }

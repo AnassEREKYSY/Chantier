@@ -18,10 +18,10 @@ class Interlocuteur
     #[ORM\Column(nullable: true)]
     private ?int $id_inter = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true,unique: true)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true,unique: true)]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255, nullable: true)]

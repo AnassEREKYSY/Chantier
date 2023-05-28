@@ -25,7 +25,8 @@
                 <thead>
                     <tr>
                         <th class="col-1">ID</th>
-                        <th class="col-5">Description</th>
+                        <th class="col-1">Nom</th>
+                        <th class="col-4">Description</th>
                         <th class="col-2">Date début</th>
                         <th class="col-1">Date fin</th>
                         <th class="col-1">Type</th>
@@ -37,6 +38,7 @@
                     {% for chantier in chantiers %}
                         <tr>
                             <td>{{ chantier.id }}</td>
+                            <td>{{ chantier.nomchantier }}</td>
                             <td>{{ chantier.description }}</td>
                             <td>{{ chantier.dateDebut | date('d/m/y')}}</td>
                             <td>{{ chantier.dateFin | date('d/m/y')}}</td>
@@ -44,12 +46,12 @@
                             <td>{{ chantier.statut }}</td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-sm">
-                                    <a href="{{ path('app_update',{'id':'chantier'})}}">
+                                    <a href="{{ path('app_edit',{'type':'chantier','id':chantier.id})}}">
                                         <i class="fas fa-pen"></i>
                                     </a>
                                 </button>
                                 <button type="button" class="btn btn-danger btn-sm">
-                                    <a href="{{ path('app_delete',{'id':'chantier'})}}">
+                                    <a href="{{ path('app_delete',{'type':'chantier','id':chantier.id})}}">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </button>

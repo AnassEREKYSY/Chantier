@@ -6,14 +6,19 @@
             <h1>Ajout d'un Chantier</h1>
             <hr>
             {{ form_start(formCreation) }}
+            {{ form_row(formCreation.nomchantier , {'attr':{'placeholder':"Nom du chantier"}}) }}
             {{ form_row(formCreation.description , {'attr':{'placeholder':"Description du chantier"}}) }}
             {{ form_row(formCreation.datedebut ) }}
             {{ form_row(formCreation.datefin ) }}
             {{ form_row(formCreation.type , {'attr':{'placeholder':"Type du chantier"}}) }}
             {{ form_row(formCreation.statut , {'attr':{'placeholder':"Statut du chantier"}}) }}
-            <button type="submit" class="btn btn-success mt-3">Ajouter le chantier</button>
+            {% if etatButton==0%}
+                <button type="submit" class="btn btn-success mt-3">Ajouter le chantier</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary mt-3">Modifier le chantier</button>
+            {% endif %}
             {{ form_end(formCreation) }}
-        {% else %}
+        {% elseif type=="inter"%}
             <h1>Ajout d'un Interlocuteur</h1>
             <hr>
             {{ form_start(formCreation) }}
@@ -21,8 +26,21 @@
             {{ form_row(formCreation.prenom , {'attr':{'placeholder':"Prénom de l'interlocuteur"}}) }}
             {{ form_row(formCreation.fonction , {'attr':{'placeholder':"Fonction de l'interlocuteur"}} ) }}
             {{ form_row(formCreation.telephone , {'attr':{'placeholder':"Télèphone de l'interlocuteur"}}) }}
-            <button type="submit" class="btn btn-success mt-3">Ajouter l'interlocuteur</button>
+            {% if etatButton==0%}
+                <button type="submit" class="btn btn-success mt-3">Ajouter l'interlocuteur</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary mt-3">Modifier l'interlocuteur</button>
+            {% endif %}
             {{ form_end(formCreation) }}
+            {% else %}
+                <h1>Affecter un Interlocuteur</h1>
+                <hr>
+                {{ form_start(formCreation) }}
+                {{ form_row(formCreation.nom, {'attr':{'Placeholder':"Nom d'interlocuteur"}}) }}
+                {{ form_row(formCreation.prenom, {'attr':{'Placeholder':"Prénom d'interlocuteur"}}) }}
+                {{ form_row(formCreation.chantier, {'attr':{'Placeholder':"Nom du chantier"}} ) }}
+                <button type="submit" class="btn btn-success mt-3">Affecter</button>
+                {{ form_end(formCreation) }}
         {% endif %}
     </div>
 {% endblock %}

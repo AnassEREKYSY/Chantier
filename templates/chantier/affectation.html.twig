@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <style>
+        a{
+            color: aliceblue;
+            text-decoration: none;
+        }
+        a:hover{
+            cursor: pointer;
+            color: aliceblue;
+        }
+    </style>
+    <div class="container">
+        <div class="container text-center">
+            <button type="button" class="btn btn-primary mx-5">
+                <a href="{{ path('app_add',{'id':'affectation'}) }}">Ajouter</a>
+            </button>
+            <button type="button" class="btn btn-success mx-5">
+                <a href="#">Chercher</a>
+            </button>
+        </div>
+        <section class="contanier my-5">
+            <table class="table text-center">
+                <thead>
+                <tr>
+                    <th ></th>
+                    <th >Nom</th>
+                    <th >Prénom</th>
+                    <th >Chantier</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for inter in inters %}
+                    {% for chantier in inter.chantier %}
+                        <tr>
+                            <td>{{ inter.nom }}</td>
+                            <td>{{ inter.prenom }}</td>
+                            <td>{{ chantier }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm">
+                                    <a href="#">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm">
+                                    <a href="#">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+{% endblock %}

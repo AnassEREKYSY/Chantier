@@ -41,12 +41,12 @@
                         <td>{{ inter.telephone }}</td>
                         <td>
                             <button type="button" class="btn btn-primary btn-sm">
-                                <a href="{{ path('app_update',{'id':'inter'})}}">
+                                <a href="{{ path('app_edit',{'type':'inter','id':inter.id})}}">
                                     <i class="fas fa-pen"></i>
                                 </a>
                             </button>
                             <button type="button" class="btn btn-danger btn-sm">
-                                <a href="{{ path('app_delete',{'id':'inter'})}}">
+                                <a href="{{ path('app_delete',{'type':'inter','id':inter.id})}}">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </button>
