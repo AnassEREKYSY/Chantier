@@ -26,7 +26,8 @@
                     <th >Nom</th>
                     <th >Prénom</th>
                     <th >Chantier</th>
-                    <th ></th>
+                    <th >Date Début du chantier</th>
+                    <th >Date Fin du chantier</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,13 +37,8 @@
                             <td>{{ inter.nom }}</td>
                             <td>{{ inter.prenom }}</td>
                             <td>{{ c.nomChantier  }}</td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm">
-                                    <a href="{{ path('app_delete',{'type':'affectation','id':inter.id,'chantier':c.nomChantier})}}">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </button>
-                            </td>
+                            <td>{{ c.dateDebut| date('d/m/y')  }}</td>
+                            <td>{{ c.dateFin | date('d/m/y')  }}</td>
                         </tr>
                     {% endfor %}
                 {% endfor %}

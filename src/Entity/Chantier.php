@@ -21,7 +21,7 @@ class Chantier
     private ?int $id_chantier = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true, unique: true)]
-    private ?string $nom_chantier = null;
+    private ?string $nomChantier = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
@@ -69,12 +69,12 @@ class Chantier
 
     public function getNomChantier(): ?string
     {
-        return $this->nom_chantier;
+        return $this->nomChantier;
     }
 
-    public function setNomChantier(?string $nom_chantier): self
+    public function setNomChantier(?string $nomChantier): self
     {
-        $this->nom_chantier = $nom_chantier;
+        $this->nomChantier = $nomChantier;
 
         return $this;
     }

@@ -2,42 +2,64 @@
 {% form_theme formSearche 'bootstrap_4_layout.html.twig' %}
 {% block body%}
     <div class="m-3 p-2">
-        <h1>Recherche d'un article</h1>
+        <h1>Recherche d'un {{ type }}</h1>
         <hr>
         {{ form_start(formSearche) }}
         <div class="container">
-            {{ form_row(formSearche.chercher , {'attr':{'placeholder':"Chercher un article"}}) }}
+            {{ form_row(formSearche.champs , {'attr':{'placeholder':"Taper ............"}}) }}
             <button type="submit" class="btn btn-success mt-3">Searche</button>
             {{ form_end(formSearche) }}
         </div>
     </div>
-    {% if articleResult!=null %}
+    {% if result!=null %}
         <table class="table table-bordered container m-2 mt-3 text-center table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Auteur</th>
-                    <th scope="col">Titre</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for article in articleResult %}
-                    <tr >
-                        <th scope="row" class="col-1">{{ article.id }}</th>
-                        <td class="col-3">{{ article.idUser.prenom }} {{ article.idUser.nom }}</td>
-                        <td class="col-6">{{ article.titre }}</td>
-                        <th scope="col-1">
-                            <a href="{{ path('app_article_details',{'id':article.id }) }}" class="col btn btn-dark mx-2 text-start">
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </th>
+            {% if type=="interlocuteur" %}
+                <thead>
+                    <tr>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prénom</th>
+                        <th scope="col">Fonction</th>
+                        <th scope="col">Télèphone</th>
                     </tr>
-                {% endfor %}
-            </tbody>
+                </thead>
+                <tbody>
+                    {% for inter in result %}
+                        <tr>
+                            <td>{{ inter.id }}</td>
+                            <td>{{ inter.nom }}</td>
+                            <td>{{ inter.prenom }}</td>
+                            <td>{{ inter.fonction }}</td>
+                            <td>{{ inter.telephone }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {% else %}
+                <thead>
+                    <tr>
+                        <th class="col-1">ID</th>
+                        <th class="col-1">Nom</th>
+                        <th class="col-4">Description</th>
+                        <th class="col-2">Date début</th>
+                        <th class="col-1">Date fin</th>
+                        <th class="col-1">Type</th>
+                        <th class="col-1">Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for chantier in result %}
+                        <tr>
+                            <td>{{ chantier.id }}</td>
+                            <td>{{ chantier.nomchantier }}</td>
+                            <td>{{ chantier.description }}</td>
+                            <td>{{ chantier.dateDebut | date('d/m/y')}}</td>
+                            <td>{{ chantier.dateFin | date('d/m/y')}}</td>
+                            <td>{{ chantier.type }}</td>
+                            <td>{{ chantier.statut }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {% endif%}
         </table>
-    {% else%}
-        <center><h3>Rien n'est trouvé</h3></center>
     {% endif %}
 
 {% endblock %}

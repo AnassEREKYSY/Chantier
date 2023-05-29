@@ -21,6 +21,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ChantierController extends AbstractController
@@ -101,9 +102,9 @@ class ChantierController extends AbstractController
             $formCreation=$form;
             $type="inter";
             if($form->isSubmitted() && $form->isValid()){
-                $manager->persist($inter);
-                $manager->flush();
-                return $this->redirectToRoute('app_interlocuteur');
+               $manager->persist($inter);
+               $manager->flush();
+               return $this->redirectToRoute('app_interlocuteur');
             }
         }else{
             $form=$this->createFormBuilder()
@@ -115,13 +116,12 @@ class ChantierController extends AbstractController
             $formCreation=$form;
             $type="affectation";
             if ($form->isSubmitted() && $form->isValid()) {
-                $interAffect=new Interlocuteur();
-                $interAffect=$interlocuteurRepository->findBy(['nom'=>$request->get('nom')]);
-                $chantierRequest=$request->request->get('chantier');
-                dd($request->get('nom'));
-                $chantierAffect=$chantierRepository->findBy(['nom_chantier'=>$chantierRequest]);
-                if($chantierAffect!=null){
+                $form=$request->request->all();
+                $interAffect=$interlocuteurRepository->findOneBy(['nom'=>$form['form']['nom']]);
+                $chantierAffect=$chantierRepository->findOneBy(['nomChantier'=>$form['form']['chantier']]);
+                if($chantierAffect!=null && $interAffect!=null){
                     $interAffect->addChantier($chantierAffect);
+                    $manager->flush();
                     return $this->redirectToRoute('app_affectation');
                 }
             }
@@ -133,8 +133,41 @@ class ChantierController extends AbstractController
                             , InterlocuteurRepository $interlocuteurRepository
                             , Request $request,EntityManagerInterface $manager): Response
     {
-        $chantier=$chantierRepository->findAll();
-        return $this->render('chantier/chantier.html.twig', ['chantiers'=>$chantier]);
+        $form=$this->createFormBuilder()
+            ->add('champs')
+            ->getForm();
+        $form->handleRequest($request);
+        $result=null;
+        $type=null;
+        $qb = $manager->createQueryBuilder();
+        if($form->isSubmitted() && $form->isValid()) {
+            if (strcmp($request->attributes->get('id'), "inter") == 0) {
+                $qb->select('i')
+                    ->from(Interlocuteur::class, 'i')
+                    ->where($qb->expr()->like('LOWER(i.nom)', ':searchTerm1'))
+                    ->orWhere($qb->expr()->like('LOWER(i.prenom)', ':searchTerm1'))
+                    ->orWhere($qb->expr()->like('LOWER(i.fonction)', ':searchTerm1'))
+                    ->setParameter('searchTerm1', '%' . strtolower($form->get('champs')->getData()) . '%');
+                $result = $qb->getQuery()->getResult();
+                $type = "interlocuteur";
+
+                return $this->render('chantier/searche.html.twig', ['formSearche' => $form->createView(), 'result' => $result, 'type' => $type]);
+            } else {
+                $qb->select('c')
+                    ->from(Chantier::class, 'c')
+                    ->where($qb->expr()->like('LOWER(c.nomChantier)', ':searchTerm1'))
+                    ->orWhere($qb->expr()->like('LOWER(c.description)', ':searchTerm1'))
+                    ->orWhere($qb->expr()->like('LOWER(c.type)', ':searchTerm1'))
+                    ->orWhere($qb->expr()->like('LOWER(c.statut)', ':searchTerm1'))
+                    ->setParameter('searchTerm1', '%' . strtolower($form->get('champs')->getData()) . '%');
+                $result = $qb->getQuery()->getResult();
+                $type = "chantier";
+
+                return $this->render('chantier/searche.html.twig', ['formSearche' => $form->createView(), 'result' => $result, 'type' => $type]);
+            }
+        }
+
+        return $this->render('chantier/searche.html.twig' ,['result'=>$result,'formSearche'=>$form->createView(),'type'=>$type]);
     }
 
     #[Route('/chantier/affectation', name: 'app_affectation')]
@@ -158,13 +191,23 @@ class ChantierController extends AbstractController
         if(strcmp($request->attributes->get('type'),"chantier")==0){
             $chantierRepository->remove($chantier,true);
             $reponse=$this->render('chantier/chantier.html.twig', ['chantiers'=>$chantierRepository->findAll()]);
-        }else{
+        }else if(strcmp($request->attributes->get('type'),"inter")==0){
             $interlocuteurRepository->remove($interlocuteur,true);
             $reponse=$this->render('chantier/interlocuteur.html.twig', ['inters'=>$interlocuteurRepository->findAll()]);
+        }else{
+            $interDelete=$interlocuteurRepository->findOneBy(['id'=>$request->get('id')]);
+            $chantierDelete=$chantierRepository->findOneBy(['nomChantier'=>$request->get('chantier')]);
+            $interDelete->removeChantier($chantierDelete);
+            $manager->flush();
+            $reponse=$this->render('chantier/affectation.html.twig', ['inters'=>$interlocuteurRepository->findAll()]);
         }
         return $reponse;
     }
-
-
+    #[Route('/chantier/historique', name: 'app_historique')]
+    public function historique(InterlocuteurRepository $interlocuteurRepository): Response
+    {
+        $inter=$interlocuteurRepository->findAll();
+        return $this->render('chantier/historique.html.twig', ['inters'=>$inter]);
+    }
 
 }
